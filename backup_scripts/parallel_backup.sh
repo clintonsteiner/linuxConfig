@@ -23,7 +23,7 @@ target=$2
 
 echo source $source
 echo target $target
-
+cd $source
 find . -type f |
   parallel --bar --verbose -j10 -X rsync -RPz -Ha "${BACKUP_EXCLUDES[@]}" ./{} $target 
 }
