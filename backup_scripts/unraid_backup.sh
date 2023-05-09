@@ -1,32 +1,7 @@
 # /bin/bash
-BACKUP_EXCLUDES=()                                                                                                                                                                                                                            
-function exclude
-{
-  while
-    (( $# ))
-  do
-    BACKUP_EXCLUDES+=(--exclude="$1")
-    shift
-  done
-}
 
-
-parallel_rsync() {                                                                                                                                                                                                                            
-    source=$1
-    target=$2
-
-    echo source $source
-    echo target $target
-    #find . -type f |
-    #  parallel --bar --verbose -j10 -X rsync -Ra "${BACKUP_EXCLUDES[@]}" ./{} $target 
-
-    rsync -arv $source $target
-    #rsync -aPv $source $target
-}
-
-echo ls -l root@rhino:/mnt/docker/appdata
-rsync -av root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/
-
+echo ls -l root@rhino:/mnt/docker/appdataJKUrsync -av --delete --exclude='plex' root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/ --dry-run
+rsync -av --delete --exclude 'plex' root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/ --dry-run
 systemName=$(cat /etc/hostname)                                                                                                                                                                                                               
 today=$(date +%F)
 backupName=${USER}_${systemName}_${today}_backup.tar.gz

@@ -22,15 +22,15 @@ parallel_rsync() {
     echo target $target
     #find . -type f |
     #  parallel --bar --verbose -j10 -X rsync -Ra "${BACKUP_EXCLUDES[@]}" ./{} $target 
-    pushd $source; ls -1 $source | xargs -I {} -P 0 -n 1 rsync -arv "${BACKUP_EXCLUDES[@]}" ./{} $target; popd;
+    pushd $source; ls -1 $source | xargs -I {} -P 0 -n 1 rsync -av --ignore-existing --delete "${BACKUP_EXCLUDES[@]}" ./{} $target; popd;
 
 }
 
 remoteRoot=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad/CURRENT_FILES/root
 
 parallel_rsync /home/cj/Desktop/deduped_fam_photos/ ${remoteRoot}/home/cj/Desktop/deduped_fam_photos/
-parallel_rsync /home/cj/Desktop/unraidBackup/ ${remoteRoot}/home/cj/Desktop/unraidBackup/
 
+BACKUP_EXCLUDES=()
 exclude /deduped_fam_photos /pycharm-community-2023.1 /unraidBackup
 parallel_rsync /home/cj/Desktop/ ${remoteRoot}/home/cj/Desktop/
 
@@ -38,4 +38,4 @@ BACKUP_EXCLUDES=()
 exclude /Desktop /.cache
 parallel_rsync /home/cj/ ${remoteRoot}/home/cj/
 
-ssh root@rhino "/bin/bash -s" < /home/cj/Desktop/linuxConfig/backup_scripts/cleanup_remote.sh
+ssh root@rhino "/bin/bash -s" < /home/cj/linuxConfig/backup_scripts/cleanup_remote.sh
