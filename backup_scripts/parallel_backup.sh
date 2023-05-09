@@ -25,7 +25,7 @@ echo source $source
 echo target $target
 cd $source
 find . -type f |
-  parallel --bar --verbose -j10 -X rsync -RPz -Ha "${BACKUP_EXCLUDES[@]}" ./{} $target 
+  parallel --bar --verbose -j10 -X rsync -Ra "${BACKUP_EXCLUDES[@]}" ./{} $target 
 }
 
 remoteRoot=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad/CURRENT_FILES/root
