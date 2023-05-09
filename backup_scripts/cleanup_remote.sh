@@ -1,4 +1,7 @@
 # /bin/bash
+systemName=$(cat /etc/hostname)
+today=$(date +%F)
+backupName=${USER}_${systemName}_${today}_backup.tar.gz
 
 echo creating $backupName of ${PWD}/CURRENT_FILES
 

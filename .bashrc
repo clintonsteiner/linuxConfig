@@ -12,6 +12,8 @@ fancy_kill(){
     proc=$1
 ps -efw | grep $proc | grep -v grep | awk '{print $2}' | xargs kill
 }
+source ~/linuxConfig/.bash_custom_aliases
+source ~/linuxConfig/.bash_custom_functions
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options

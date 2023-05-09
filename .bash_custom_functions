@@ -1,0 +1,15 @@
+# /bin/bash
+
+dir_size(){
+    du -h --max-depth=2 $1 | sort -hr
+}
+fancy_kill(){
+    for p in $(ps aux | grep $1 | grep -v grep | awk '{print $2}'); do kill $p; done
+}
+
+fancy_list(){
+    ps aux | grep $1 | grep -v grep
+}
+to_dev_null(){
+ $1 > /dev/null 2>&1
+}
