@@ -1,62 +1,45 @@
 # /bin/bash
 echo beginning rsync command
-base=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad
-
-source=/home/cj
-base=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad
-target=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad/cur
-
-prepare_files(){
-source=$1
-# create files if dont exist
-touch /tmp/parentlist
-touch /tmp/filelist
 
 
-find ${source}/./ -maxdepth 5 -type d | perl -pe 's|^.*?/\./|\1|' > /tmp/rawfilelist
-# get list of files within directory limit to copy non recursively
-cp /tmp/rawfilelist /tmp/parentslist
-cp /tmp/rawfilelist /tmp/filelist
-sed -i '/^\(.*\/\)\{4\}.*$/d' /tmp/parentlist
-sed -i '/^\(.*\/\)\{4\}.*$/!d' /tmp/filelist
+
+BACKUP_EXCLUDES=()
+function exclude
+{
+  while
+    (( $# ))
+  do
+    BACKUP_EXCLUDES+=(--exclude="$1")
+    shift
+
+  done
+  echo $BACKUP_EXCLUDES
+  read
 }
 
 parallel_rsync() {
 source=$1
 target=$2
 
-prepare_files $source
-# rsync parents
-cat /tmp/parentlist | parallel -j 3 'shopt -s dotglob; rsync -aHvx --no-r --relative /tmp/${source}/./{}/* /tmp/${target}/'
+echo source $source
+echo target $target
 
-# rsync more nested directories
-cat /tmp/filelist | parallel -j 10 rsync -aHvx --relative ${source}/./{} ${target}
-
-# catch anything else
-rsync -aHvx --delete ${source}/ ${target}
+find . -type f |
+  parallel --bar --verbose -j10 -X rsync -RPz -Ha "${BACKUP_EXCLUDES[@]}" ./{} $target 
 }
 
-find ${source}/./ -maxdepth 5 -type d | perl -pe 's|^.*?/\./|\1|' > /tmp/rawfilelist
-# get list of files within directory limit to copy non recursively
-cp /tmp/rawfilelist /tmp/parentslist
-cp /tmp/rawfilelist /tmp/filelist
-sed -i '/^\(.*\/\)\{4\}.*$/d' /tmp/parentlist
-sed -i '/^\(.*\/\)\{4\}.*$/!d' /tmp/filelist
+remoteRoot=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad/CURRENT_FILES/root
 
-# rsync parents
-cat /tmp/parentlist | parallel -j 3 'shopt -s dotglob; rsync -aHvx --no-r --relative /tmp/${source}/./{}/* /tmp/${target}/'
-
-# rsync more nested directories
-cat /tmp/filelist | parallel -j 10 rsync -aHvx --relative ${source}/./{} ${target}
-
-# catch anything else
-rsync -aHvx --delete ${source}/ ${target}
-
-
-#rsync -av --delete --exclude=Desktop --exclude=.cache /home/cj/ ${base}/CURRENT_FILES/home/ &
-#rsync -av --delete /home/cj/Desktop/deduped_fam_photos/ ${base}/CURRENT_FILES/fam_photos/ &
-#rsync -av --delete /home/cj/Desktop/unraid_backup/ ${base}/CURRENT_FILES/unraid_backup/ &
-#rsync -av --delete --exclude=pycharm-community-2023.1 --exclude=deduped_fam_photos --exclude=unraidBackup /home/cj/Desktop/ ${base}/CURRENT_FILES/Desktop/
+parallel_rsync /home/cj/Desktop/deduped_fam_photos/ ${remoteRoot}/home/cj/Desktop/deduped_fam_photos/
+BACKUP_EXCLUDES=()
+exclude /deduped_fam_photos
+parallel_rsync /home/cj/Desktop/ ${remoteRoot}/home/cj/Desktop/
+BACKUP_EXCLUDES=()
+exclude /Desktop
+parallel_rsync /home/cj/ ${remoteRoot}/home/cj/
+BACKUP_EXCLUDES=()
+exclude /home/cj
+parallel_rsync / ${remoteRoot}/
 
 systemName=$(cat /etc/hostname)
 today=$(date +%F)
