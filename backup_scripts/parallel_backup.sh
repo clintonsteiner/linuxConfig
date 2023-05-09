@@ -3,7 +3,6 @@
 BACKUP_EXCLUDES=()
 function exclude
 {
-  BACKUP_EXCLUDES=()
   while
     (( $# ))
   do
@@ -18,15 +17,17 @@ parallel_rsync() {
 
     echo source $source
     echo target $target
-    pushd $source; ls -1 $source | xargs -I {} -P 10 -n 1 rsync -av --size-only --ignore-existing "${BACKUP_EXCLUDES[@]}" ./{} $target; popd;
+    rsync -av "${BACKUP_EXCLUDES[@]}" ./{} $target
 }
 
 remoteRoot=root@rhino:/mnt/disk1/data/backups/linux_backups/cj_thinkpad/CURRENT_FILES/root
-parallel_rsync /home/cj/Desktop/deduped_fam_photos.tar.gz ${remoteRoot}/home/cj/Desktop/deduped_fam_photos.tar.gz
+#parallel_rsync /home/cj/Desktop/deduped_fam_photos ${remoteRoot}/home/cj/Desktop/deduped_fam_photos
 
-exclude /deduped_fam_photos /pycharm-community-2023.1 /unraidBackup
+BACKUP_EXCLUDES=()
+exclude deduped_fam_photos/ /pycharm-community-2023.1 /unraidBackup
 parallel_rsync /home/cj/Desktop/ ${remoteRoot}/home/cj/Desktop/
 
+BACKUP_EXCLUDES=()
 exclude /Desktop /.cache
 parallel_rsync /home/cj/ ${remoteRoot}/home/cj/
 

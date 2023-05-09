@@ -1,0 +1,10 @@
+## .bash_variables
+
+
+
+export EDITOR=vim
+export PSQL_EDITOR=vim
+export CC=clang
+export CXX=clang++
+export PGCONNECT_TIMEOUT=5
+

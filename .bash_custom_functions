@@ -1,4 +1,11 @@
 # /bin/bash
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+function sendf() {
+    echo stuff | nail -a $1 -s files clintonsteiner@gmail.com
+}
 
 dir_size(){
     du -h --max-depth=2 $1 | sort -hr

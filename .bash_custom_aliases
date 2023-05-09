@@ -6,3 +6,7 @@ alias ...='cd ../../'
 alias ....='cd ../../../'
 
 alias tmux='tmux -2'
+alias pip='pip3'
+alias python='python3'
+alias sshfix='eval $(ssh-agent);ssh-add'
+

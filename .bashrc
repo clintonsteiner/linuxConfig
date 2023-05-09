@@ -12,6 +12,10 @@ fancy_kill(){
     proc=$1
 ps -efw | grep $proc | grep -v grep | awk '{print $2}' | xargs kill
 }
+if [ -f ~/.git-completion ]; then
+    . ~/.git-completion
+fi
+
 source ~/linuxConfig/.bash_custom_aliases
 source ~/linuxConfig/.bash_custom_functions
 export TERM=xterm-256color
