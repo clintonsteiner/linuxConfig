@@ -10,9 +10,5 @@ rsync -av --delete --exclude=pycharm-community-2023.1 --exclude=deduped_fam_phot
 systemName=$(cat /etc/hostname)
 today=$(date +%F)
 export backupName=${USER}_${systemName}_${today}_backup.tar.gz
-echo $backupName
 
 ssh root@rhino "backupName=${backupName@Q} /bin/bash -s" < /home/cj/Desktop/backup_scripts/cleanup_remote.sh
-#ssh root@rhino "backupName=$(printf '%q' "$backupName") /home/cj/Desktop/backup_scripts/cleanup_remote.sh"
-#ssh root@rhino 'bash -s' < /home/cj/Desktop/backup_scripts/cleanup_remote.sh "backupName=${backupName@Q}"
-
