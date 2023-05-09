@@ -8,11 +8,6 @@ case $- in
       *) return;;
 esac
 
-fancy_kill(){
-    proc=$1
-ps -efw | grep $proc | grep -v grep | awk '{print $2}' | xargs kill
-}
-
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
