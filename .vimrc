@@ -1,5 +1,5 @@
-et nocompatible                                                                                                      
-filetype off 
+set nocompatible
+filetype off
 
 filetype plugin indent on
 inoremap jk <esc>
@@ -13,4 +13,4 @@ set expandtab
 set shiftwidth=4
 set cursorline
 set showmatch
-let python_highlight_all = 1 
+let python_highlight_all = 1
