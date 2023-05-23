@@ -1,7 +1,7 @@
 # /bin/bash
 
 echo ls -l root@rhino:/mnt/docker/appdataJKUrsync -av --delete --exclude='plex' root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/ --dry-run
-rsync -av --delete --exclude 'plex' root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/ --dry-run
+rsync -av --delete --exclude 'plex' root@rhino:/mnt/docker/appdata/ /home/cj/Desktop/unraidBackup/CURRENT_FILES/mnt/docker/appdata/
 systemName=$(cat /etc/hostname)                                                                                                                                                                                                               
 today=$(date +%F)
 backupName=${USER}_${systemName}_${today}_backup.tar.gz
